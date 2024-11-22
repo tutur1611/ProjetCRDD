@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="./bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding-top: 70px; /* Ajustez cette valeur en fonction de la hauteur de votre header */
+      padding-bottom: 70px; /* Ajustez cette valeur en fonction de la hauteur de votre footer */
+    }
+    header, footer {
+      background-color: #6c757d; 
+      width: 100%;
+      padding: 10px 0;
+      color: white; 
+    }
+    .content {
+      margin-top: 20px;
+    }
+    .left-column, .right-column {
+      padding: 20px;
+      background-color: #343a40; 
+      color: white; 
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header class="header fixed-top d-flex justify-content-center align-items-center">
+    <h3 class="text-decoration-underline p-2">PROJET CRDD</h3>
+  </header>
+
+  <div class="container content">
+    <div class="row justify-content-center">
+      <div class="col-md-5 left-column me-3">
+        <h4>Gauche</h4>
+        <p>{{ content }}</p>
+      </div>
+      <div class="col-md-5 right-column">
+        <h4>Droite</h4>
+        <p>{{ content }}</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer fixed-bottom d-flex justify-content-center align-items-center">
+    <p class="m-0">FOOTER</p>
+  </footer>
+
+  <script src="../bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
