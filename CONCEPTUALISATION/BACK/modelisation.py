@@ -34,8 +34,24 @@ cooPetiteVolte = [
                   (30, 14.5), # B
                   (18, 14.5), # R
                   (6, 14.5),  # M
-                  (5.5, 10),  # C
+                  (5.5, 10)   # C
                    ]
+
+cooVolte = [
+            (6 ,5.5),   # H
+            (18, 10),  # S
+            (30, 10),  # E
+            (42, 10),  # V
+            (54, 5.5),  # K
+            (50, 10), # A
+            (54, 10), # F
+            (42, 10), # P
+            (30, 10), # B
+            (18, 10), # R
+            (6, 14.5),  # M
+            (10, 10)   # C
+            ]
+
 positionsLettres = [
     (6, -1.5),    # H
     (18, -1.5),   # S
@@ -147,6 +163,20 @@ def diagonale(secu, A, C, main):
         input(print("veuillez indiquer a quel main vous êtes ==> "))
         return
     
+def Volte(secu, A):
+    if A not in lettres_list or A in ("M", "H", "F", "K"):
+        
+        print(f"Erreur : '{A}' n'est pas dans la liste des lettres.") 
+        secu = False
+        return secu
+    depart = lettres_list.index(A)
+    x_depart, y_depart = cooVolte[depart]
+
+    cercle = Circle((x_depart, y_depart), 9.5, fill=False, edgecolor='black')
+    ax.add_patch(cercle)
+    secu = True
+    return secu
+
 def PetiteVolte(secu, A):
     if A not in lettres_list:
         print(f"Erreur : '{A}' n'est pas dans la liste des lettres.")
@@ -162,9 +192,8 @@ def PetiteVolte(secu, A):
     return secu
 
 AffichageLettres()
-secu = doubler(True, 'A', 'C')
-secu = diagonale(True, 'K', 'M', main)
-secu = PetiteVolte(secu, 'C')
+secu = Volte(secu, 'A')
+secu = PetiteVolte(secu, 'M')
 
 if secu == True:
     plt.show()
