@@ -54,11 +54,12 @@
           </div>
         </form>
       </div>
-      <div class="col-md-5 right-column">
+      <div class="col-md-5 right-column w-50">
         <form id="dynamic-form">
         </form>
       </div>
     </div>
+    <button id="generer_graph" class="btn btn-primary mt-3">Génerer la reprise de dressage.</button>
   </div>
 
   <footer class="footer fixed-bottom d-flex justify-content-center align-items-center">
@@ -67,11 +68,53 @@
 
   <script src="../bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    // document.getElementById("generer_graph").addEventListener("click", function () {
+    //   const figuresDropdown = document.getElementById("figures");
+    //   const numberOfFigures = parseInt(figuresDropdown.value, 10);
+    //   const figures = [];
+
+    //   for (let i = 1; i <= numberOfFigures; i++) {
+    //     const type = document.getElementById(`figure-${i}`).value;
+    //     const start = document.getElementById(`depart-${i}`).value;
+    //     const end = document.getElementById(`arrive-${i}`).value;
+
+    //     figures.push({
+    //       type: type,
+    //       start: start,
+    //       end: end
+    //     });
+    //   }
+
+    //   fetch("/generer_graph", {
+    //     method: "POST",
+    //     headers: {
+    //       "content-type": "application/json"
+    //     },
+    //     body: JSON.stringify({ figures: figures})
+    //   })
+    //   .then(response => {
+    //     if (!response.ok) {
+    //       throw new Error("Erreur lors de la génération de la reprise de dressage");
+    //     }
+    //     return response.blob();
+    //   })
+    //   .then(blob => {
+    //     const img = document.createElement("img");
+    //     img.src = URL.createObjectURL(blob);
+    //     const plotContainer = document.getElementById("plot-container");
+    //     plotContainer.innetHTML = "";
+    //     plotContainer.appendChild(ing);
+    //   })
+    //   .catch(error => {
+    //     console.error("Erreur :", error);
+    //     alert("Une erreur est survenue lors de la génération de la reprise de dressage.")
+    //   })
+    // })
+
     document.addEventListener("DOMContentLoaded", function () {
       const figuresDropdown = document.getElementById("figures");
       const dynamicForm = document.getElementById("dynamic-form");
 
-      // Fonction pour générer un bloc de sélection
       function createSelectionBlock(index) {
         return `
           <div class="d-flex align-items-center mb-3">

@@ -191,9 +191,13 @@ def PetiteVolte(secu, A):
     secu = True
     return secu
 
-AffichageLettres()
-secu = Volte(secu, 'A')
-secu = PetiteVolte(secu, 'M')
+
+def Generer_graph(secu):
+    AffichageLettres()
+    secu = Volte(secu, 'A')
+    secu = PetiteVolte(secu, 'M')
+
+Generer_graph(secu)
 
 if secu == True:
     plt.show()
