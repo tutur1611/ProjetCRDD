@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Paramètres{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Paramètres de l'utilisateur</h2>
+    <p class="text-center">Gérez vos informations personnelles et vos préférences ici.</p>
+
+    <!-- Section des informations utilisateur -->
+    <div class="row mt-4">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow">
+                <div class="card-header bg-secondary text-white text-center">
+                    <h5>Informations personnelles</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Nom :</strong> {{ current_user.nom }}</p>
+                    <p><strong>Prénom :</strong> {{ current_user.prenom }}</p>
+                    <p><strong>Email :</strong> {{ current_user.mail }}</p>
+                    <p><strong>Nom d'utilisateur :</strong> {{ current_user.username }}</p>
+                    <p><strong>Rôle :</strong> {{ current_user.role.nom }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section des actions utilisateur -->
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Modifier mes informations</h5>
+                    <a href="#" class="btn btn-primary">Modifier</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Changer mon mot de passe</h5>
+                    <a href="#" class="btn btn-secondary">Changer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

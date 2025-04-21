@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Panneau Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Panneau Administrateur</h2>
+
+    <!-- Section pour afficher le nombre total d'utilisateurs -->
+    <div class="alert alert-info text-center">
+        <strong>Nombre total d'utilisateurs :</strong> {{ users|length }}
+    </div>
+
+    <!-- Liste déroulante pour sélectionner un utilisateur par ID -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Sélectionner un utilisateur</h5>
+        </div>
+        <div class="card-body">
+            <label for="userSelect" class="form-label"><strong>Sélectionnez un utilisateur par ID :</strong></label>
+            <select id="userSelect" class="form-select" onchange="showUserDetails(this.value)">
+                <option value="">-- Sélectionnez un ID --</option>
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user.id }} - {{ user.nom }} {{ user.prenom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- Panneau pour afficher les détails de l'utilisateur sélectionné -->
+    <div id="userDetails" class="card shadow mb-4" style="display: none;">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Détails de l'utilisateur</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>ID :</strong> <span id="detailId"></span></p>
+            <p><strong>Nom :</strong> <span id="detailNom"></span></p>
+            <p><strong>Prénom :</strong> <span id="detailPrenom"></span></p>
+            <p><strong>Email :</strong> <span id="detailMail"></span></p>
+            <p><strong>Rôle :</strong> <span id="detailRole"></span></p>
+        </div>
+    </div>
+
+    <!-- Tableau des utilisateurs -->
+    <div class="card shadow">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Liste des utilisateurs</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                        <th>Rôle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.nom }}</td>
+                        <td>{{ user.prenom }}</td>
+                        <td>{{ user.mail }}</td>
+                        <td>{{ user.role.nom }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Fonction pour afficher les détails de l'utilisateur sélectionné
+    function showUserDetails(userId) {
+        const userDetails = document.getElementById('userDetails');
+        if (!userId) {
+            userDetails.style.display = 'none';
+            return;
+        }
+
+        // Récupérer les données de l'utilisateur depuis le tableau
+        const users = {{ users|tojson }};
+        const user = users.find(u => u.id == userId);
+
+        if (user) {
+            document.getElementById('detailId').textContent = user.id;
+            document.getElementById('detailNom').textContent = user.nom;
+            document.getElementById('detailPrenom').textContent = user.prenom;
+            document.getElementById('detailMail').textContent = user.mail;
+            document.getElementById('detailRole').textContent = user.role.nom;
+            userDetails.style.display = 'block';
+        }
+    }
+</script>
+{% endblock %}

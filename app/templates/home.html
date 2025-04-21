@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Bloc de présentation -->
+    <div class="row mb-4">
+        <div class="col-12 p-4 bg-secondary text-white rounded">
+            <h2 class="text-center">Bienvenue sur le projet CRDD</h2>
+            <p class="text-center mt-3">
+                Ce site vous permettra de créer de A à Z des reprises de dressage afin de les visualiser et de les enregistrer.
+            </p>
+            {% if not current_user.is_authenticated %}
+            <p class="text-center mt-3">
+                Veuillez vous <a href="{{ url_for('main.login') }}" class="text-white fw-bold">connecter</a> ou 
+                <a href="{{ url_for('main.signIn') }}" class="text-white fw-bold">créer un compte</a> pour accéder à la suite.
+            </p>
+            {% else %}
+            <p class="text-center mt-3">
+                Vous êtes connecté en tant que <strong>{{ current_user.username }}</strong>. Accédez à votre 
+                <a href="{{ url_for('main.dashboard') }}" class="text-white fw-bold">tableau de bord</a>.
+            </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Deux blocs côte à côte -->
+    <div class="row">
+        <!-- Bloc gauche -->
+        <div class="col-md-6 p-4 bg-secondary text-white rounded">
+            <h4 class="text-center">Bloc Gauche</h4>
+            <p class="text-center">Contenu du bloc gauche.</p>
+        </div>
+
+        <!-- Bloc droit -->
+        <div class="col-md-6 p-4 bg-secondary text-white rounded">
+            <h4 class="text-center">Bloc Droit</h4>
+            <p class="text-center">Contenu du bloc droit.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
