@@ -1,10 +1,108 @@
 {% extends 'base.html' %}
 
-{% block title %}Mon Profil{% endblock %}
+{% block title %}Paramètres{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="text-center">Mon Profil</h2>
-    <p class="text-center">Bienvenue sur votre page de profil.</p>
+    <h2 class="text-center mb-4">Paramètres de l'utilisateur</h2>
+    <p class="text-center">Gérez vos informations personnelles et vos préférences ici.</p>
+
+    <!-- Section des informations utilisateur -->
+    <div class="row mt-4">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow">
+                <div class="card-header bg-secondary text-white text-center">
+                    <h5>Informations personnelles</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Nom :</strong> {{ current_user.nom }}</p>
+                    <p><strong>Prénom :</strong> {{ current_user.prenom }}</p>
+                    <p><strong>Email :</strong> {{ current_user.mail }}</p>
+                    <p><strong>Nom d'utilisateur :</strong> {{ current_user.username }}</p>
+                    <p><strong>Langue :</strong> {{ current_user.langue }}</p>
+                    <p><strong>Thème :</strong> {{ current_user.theme }}</p>
+                    <p><strong>Niveau :</strong> {{ current_user.niveau }}</p>
+                    <p><strong>Date d'inscription :</strong> {{ current_user.date_inscription }}</p>
+                    <p><strong>Dernière connexion :</strong> {{ current_user.derniere_connexion or 'Jamais' }}</p>
+                    <p><strong>Nombre de connexions :</strong> {{ current_user.nombre_connexions }}</p>
+                </div>
+                <div class="card-footer text-center">
+                    <button class="btn btn-primary" onclick="toggleEditForm()">Modifier mes informations</button>
+                    <a href="{{ url_for('main.user_reprises') }}" class="btn btn-info">Voir mes reprises</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section pour modifier les informations (masquée par défaut) -->
+    <div class="row mt-5" id="editFormContainer" style="display: none;">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow">
+                <div class="card-header bg-secondary text-white text-center">
+                    <h5>Modifier mes informations</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('main.update_profile') }}">
+                        <div class="mb-3">
+                            <label for="nom" class="form-label">Nom :</label>
+                            <input type="text" id="nom" name="nom" class="form-control" value="{{ current_user.nom }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="prenom" class="form-label">Prénom :</label>
+                            <input type="text" id="prenom" name="prenom" class="form-control" value="{{ current_user.prenom }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mail" class="form-label">Email :</label>
+                            <input type="email" id="mail" name="mail" class="form-control" value="{{ current_user.mail }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Nom d'utilisateur :</label>
+                            <input type="text" id="username" name="username" class="form-control" value="{{ current_user.username }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="langue" class="form-label">Langue :</label>
+                            <select id="langue" name="langue" class="form-select">
+                                <option value="Français" {% if current_user.langue == 'Français' %}selected{% endif %}>Français</option>
+                                <option value="Anglais" {% if current_user.langue == 'Anglais' %}selected{% endif %}>Anglais</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="theme" class="form-label">Thème :</label>
+                            <select id="theme" name="theme" class="form-select">
+                                <option value="Clair" {% if current_user.theme == 'Clair' %}selected{% endif %}>Clair</option>
+                                <option value="Sombre" {% if current_user.theme == 'Sombre' %}selected{% endif %}>Sombre</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="niveau" class="form-label">Niveau :</label>
+                            <select id="niveau" name="niveau" class="form-select">
+                                <option value="G1" {% if current_user.niveau == 'G1' %}selected{% endif %}>Galop 1</option>
+                                <option value="G2" {% if current_user.niveau == 'G2' %}selected{% endif %}>Galop 2</option>
+                                <option value="G3" {% if current_user.niveau == 'G3' %}selected{% endif %}>Galop 3</option>
+                            </select>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">Enregistrer les modifications</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <button class="btn btn-secondary" onclick="toggleEditForm()">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    // Fonction pour afficher/masquer le formulaire de modification
+    function toggleEditForm() {
+        const editFormContainer = document.getElementById('editFormContainer');
+        if (editFormContainer.style.display === 'none') {
+            editFormContainer.style.display = 'block';
+        } else {
+            editFormContainer.style.display = 'none';
+        }
+    }
+</script>
 {% endblock %}

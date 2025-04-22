@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Modifier un utilisateur{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Modifier un utilisateur</h2>
+    <form method="POST" action="{{ url_for('main.edit_user', user_id=user.id) }}">
+        <div class="mb-3">
+            <label for="nom" class="form-label">Nom :</label>
+            <input type="text" id="nom" name="nom" class="form-control" value="{{ user.nom }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="prenom" class="form-label">Prénom :</label>
+            <input type="text" id="prenom" name="prenom" class="form-control" value="{{ user.prenom }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="mail" class="form-label">Email :</label>
+            <input type="email" id="mail" name="mail" class="form-control" value="{{ user.mail }}">
+        </div>
+        <div class="mb-3">
+            <label for="username" class="form-label">Nom d'utilisateur :</label>
+            <input type="text" id="username" name="username" class="form-control" value="{{ user.username }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="langue" class="form-label">Langue :</label>
+            <select id="langue" name="langue" class="form-select">
+                <option value="Français" {% if user.langue == 'Français' %}selected{% endif %}>Français</option>
+                <option value="Anglais" {% if user.langue == 'Anglais' %}selected{% endif %}>Anglais</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="theme" class="form-label">Thème :</label>
+            <select id="theme" name="theme" class="form-select">
+                <option value="Clair" {% if user.theme == 'Clair' %}selected{% endif %}>Clair</option>
+                <option value="Sombre" {% if user.theme == 'Sombre' %}selected{% endif %}>Sombre</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="niveau" class="form-label">Niveau :</label>
+            <input type="text" id="niveau" name="niveau" class="form-control" value="{{ user.niveau }}">
+        </div>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-success">Enregistrer les modifications</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

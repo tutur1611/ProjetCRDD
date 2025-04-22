@@ -29,6 +29,7 @@ class User(UserMixin, db.Model):
     theme = db.Column(db.String(10), default='Clair')  # Thème préféré
     nombre_connexions = db.Column(db.Integer, default=0)  # Suivi des connexions
     reprises = db.relationship('Reprise', back_populates='user')  # Relation avec les reprises
+    niveau = db.Column(db.String(45), unique=True, nullable=True)  # Niveau de l'utilisateur
 
     # Relation avec la table Role
     role = db.relationship('Role', back_populates='users', lazy=True)
@@ -47,7 +48,8 @@ class User(UserMixin, db.Model):
             'date_inscription': self.date_inscription,
             'derniere_connexion': self.derniere_connexion,
             'langue': self.langue,
-            'theme': self.theme
+            'theme': self.theme,
+            'niveau': self.niveau
         }
 
     def __repr__(self):
