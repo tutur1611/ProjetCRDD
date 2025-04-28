@@ -13,13 +13,12 @@
             </p>
             {% if not current_user.is_authenticated %}
             <p class="text-center mt-3">
-                Veuillez vous <a href="{{ url_for('main.login') }}" class="text-white fw-bold">connecter</a> ou 
+                Veuillez vous <a href="{{ url_for('main.login_route') }}" class="text-white fw-bold">connecter</a> ou 
                 <a href="{{ url_for('main.signIn') }}" class="text-white fw-bold">créer un compte</a> pour accéder à la suite.
             </p>
             {% else %}
             <p class="text-center mt-3">
-                Vous êtes connecté en tant que <strong>{{ current_user.username }}</strong>. Accédez à votre 
-                <a href="{{ url_for('main.dashboard') }}" class="text-white fw-bold">tableau de bord</a>.
+                Vous êtes connecté en tant que <strong>{{ current_user.username }}</strong>.
             </p>
             {% endif %}
         </div>

@@ -1,9 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_file
-from app import db, bcrypt
-from app.models import User, Role, Login, Reprise, Figure
-from flask_login import login_required, login_user, logout_user, current_user
-from flask import session
+from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, send_file, request
+from flask_login import login_required, logout_user, current_user
+from app.static.logique_routes import login, handle_sign_in, handle_update_profile, handle_edit_user, handle_delete_user, handle_reset_password
 from reprises_de_dressage import generate_graph
+from app.models import User, Reprise
 
 main = Blueprint('main', __name__)
 
@@ -12,87 +11,18 @@ def home():
     return render_template('home.html')
 
 @main.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-
-        user_login = Login.query.filter_by(username=username).first()
-
-        if not user_login:
-            flash("Nom d'utilisateur ou mot de passe incorrect.", "danger")
-            return redirect(url_for('main.login'))
-
-        if not bcrypt.check_password_hash(user_login.password, password):
-            flash("Mot de passe incorrect.", "danger")
-            return redirect(url_for('main.login'))
-
-        user = User.query.get(user_login.idUser)
-        session.permanent = True
-        login_user(user)
-        flash("Connexion réussie !", "success")
-        return redirect(url_for('main.home'))
-
-    return render_template('login.html')
+def login_route():
+    return login()  # Appelle la fonction `login` importée depuis `logique_routes.py`
 
 @main.route('/logout')
 def logout():
     logout_user()
     flash("Vous avez été déconnecté.", "success")
-    return redirect(url_for('main.login'))
-
-@main.route('/logout_on_close', methods=['POST'])
-def logout_on_close():
-    if current_user.is_authenticated:
-        logout_user()
-    return '', 204
+    return redirect(url_for('main.login_route'))
 
 @main.route('/signIn', methods=['GET', 'POST'])
 def signIn():
-    if current_user.is_authenticated:
-        flash("Vous êtes déjà connecté.", "info")
-        return redirect(url_for('main.home'))
-
-    if request.method == 'POST':
-        nom = request.form.get('nom')
-        prenom = request.form.get('prenom')
-        email = request.form.get('mail')
-        username = request.form.get('username')
-        password = request.form.get('motDePasse')
-        password_confirmation = request.form.get('motDePasseConfirmation')
-
-        if not username:
-            flash("Le champ 'Nom d'utilisateur' est obligatoire.", "danger")
-            return redirect(url_for('main.signIn'))
-
-        if password != password_confirmation:
-            flash("Les mots de passe sont différents.", "danger")
-            return redirect(url_for('main.signIn'))
-
-        existing_user = Login.query.filter_by(username=username).first()
-        if existing_user:
-            flash("Nom d'utilisateur déjà pris.", "danger")
-            return redirect(url_for('main.signIn'))
-
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-
-        user_role = Role.query.filter_by(nom='User').first()
-        if not user_role:
-            flash("Le rôle 'User' n'existe pas. Veuillez contacter un administrateur.", "danger")
-            return redirect(url_for('main.signIn'))
-
-        new_user = User(nom=nom, prenom=prenom, mail=email, username=username, role_id=user_role.id)
-        db.session.add(new_user)
-        db.session.commit()
-
-        new_login = Login(idUser=new_user.id, username=username, password=hashed_password)
-        db.session.add(new_login)
-        db.session.commit()
-
-        flash("Inscription réussie ! Vous pouvez maintenant vous connecter.", "success")
-        return redirect(url_for('main.login'))
-
-    return render_template('signIn.html')
+    return handle_sign_in()
 
 @main.route('/dashboard')
 @login_required
@@ -121,64 +51,19 @@ def creation_reprise():
 @main.route('/update_profile', methods=['POST'])
 @login_required
 def update_profile():
-    nom = request.form.get('nom')
-    prenom = request.form.get('prenom')
-    mail = request.form.get('mail')
-    username = request.form.get('username')
-    langue = request.form.get('langue')
-    theme = request.form.get('theme')
-    niveau = request.form.get('niveau')
-
-    # Vérifier si le nom d'utilisateur est déjà pris par un autre utilisateur
-    existing_user = User.query.filter(User.username == username, User.id != current_user.id).first()
-    if existing_user:
-        flash("Nom d'utilisateur déjà pris par un autre utilisateur.", "danger")
-        return redirect(url_for('main.profile'))
-
-    # Mettre à jour les informations de l'utilisateur
-    current_user.nom = nom
-    current_user.prenom = prenom
-    current_user.mail = mail
-    current_user.username = username
-    current_user.langue = langue
-    current_user.theme = theme
-    current_user.niveau = niveau
-
-    db.session.commit()
-    flash("Vos informations ont été mises à jour avec succès.", "success")
-    return redirect(url_for('main.profile'))
+    return handle_update_profile()
 
 @main.route('/admin/edit_user/<int:user_id>', methods=['GET', 'POST'])
 def edit_user(user_id):
-    user = User.query.get_or_404(user_id)
-    if request.method == 'POST':
-        user.nom = request.form.get('nom')
-        user.prenom = request.form.get('prenom')
-        user.mail = request.form.get('mail')
-        user.username = request.form.get('username')
-        user.langue = request.form.get('langue')
-        user.theme = request.form.get('theme')
-        user.niveau = request.form.get('niveau')
-        db.session.commit()
-        flash("Les informations de l'utilisateur ont été mises à jour avec succès.", "success")
-        return redirect(url_for('main.admin_panel'))
-    return render_template('edit_user.html', user=user)
+    return handle_edit_user(user_id)
 
 @main.route('/admin/delete_user/<int:user_id>', methods=['POST'])
 def delete_user(user_id):
-    user = User.query.get_or_404(user_id)
-    db.session.delete(user)
-    db.session.commit()
-    return jsonify({'message': 'Utilisateur supprimé avec succès.'}), 200
+    return handle_delete_user(user_id)
 
 @main.route('/admin/reset_password/<int:user_id>', methods=['POST'])
 def reset_password(user_id):
-    user = User.query.get_or_404(user_id)
-    temp_password = "new_password123"
-    user_login = Login.query.filter_by(idUser=user.id).first()
-    user_login.password = bcrypt.generate_password_hash(temp_password).decode('utf-8')
-    db.session.commit()
-    return jsonify({'message': 'Mot de passe réinitialisé avec succès.'}), 200
+    return handle_reset_password(user_id)
 
 @main.route('/user_reprises')
 @login_required

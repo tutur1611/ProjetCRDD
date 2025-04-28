@@ -13,12 +13,14 @@ def create_app():
     app.config['SECRET_KEY'] = 'une_cle_secrete'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['PERMANTNT_SESSION_LIFETMIE'] = timedelta(minutes=15)
-
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=15)
+    app.config['SESSION_COOKIE_SECURE'] = False  # Mettre True en production avec HTTPS
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
-    login_manager.login_view = 'main.login'
+    login_manager.login_view = 'main.login_route'
     login_manager.login_message = "Veuillez vous connecter pour accéder à cette page."
     login_manager.login_message_category = "warning"
 
