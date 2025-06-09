@@ -6,7 +6,7 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Créer une Reprise</h2>
 
-    <!-- Étape 1 : Sélection du nombre de figures -->
+    
     <div id="step1" class="card shadow mb-4">
         <div class="card-header bg-secondary text-white">
             <h5 class="mb-0">Étape 1 : Nombre de Figures</h5>
@@ -20,13 +20,13 @@
                 {% endfor %}
             </select>
             <div class="d-grid mt-4">
-                <!-- Bouton pour passer à l'étape 2 -->
+                
                 <button id="nextButton" type="button" class="btn btn-primary">Suivant</button>
             </div>
         </div>
     </div>
 
-    <!-- Étape 2 : Formulaires dynamiques pour les figures -->
+
     <div id="step2" class="card shadow mb-4" style="display: none;">
         <div class="card-header bg-secondary text-white">
             <h5 class="mb-0">Étape 2 : Détails des Figures</h5>
@@ -35,11 +35,11 @@
             <form id="figuresForm">
                 <div id="figureForms"></div>
                 <div class="d-grid mt-4">
-                    <!-- Bouton pour enregistrer la reprise -->
+                    
                     <button id="saveButton" type="button" class="btn btn-success">Enregistrer la Reprise</button>
                 </div>
                 <div class="d-grid mt-4">
-                    <!-- Bouton pour générer le graphique -->
+                    
                     <button id="generateButton" type="button" class="btn btn-primary">Générer le Graphique</button>
                 </div>
                 <div id="graphContainer" class="mt-4 text-center"></div>
@@ -52,27 +52,27 @@
     document.addEventListener('DOMContentLoaded', () => {
         console.log("DOM chargé !");
 
-        // Récupérer les éléments HTML
+        
         const nextButton = document.getElementById('nextButton');
         const saveButton = document.getElementById('saveButton');
         const generateButton = document.getElementById('generateButton');
 
-        // Gestion du clic sur le bouton "Suivant"
+        
         nextButton.addEventListener('click', () => {
             console.log("Bouton 'Suivant' cliqué !");
-            generateFigureForms(); // Appelle la fonction définie dans scripts.js
+            generateFigureForms(); 
         });
 
-        // Gestion du clic sur le bouton "Enregistrer la Reprise"
+        
         saveButton.addEventListener('click', () => {
             console.log("Bouton 'Enregistrer la Reprise' cliqué !");
-            saveReprise(); // Appelle la fonction définie dans scripts.js
+            saveReprise(); 
         });
 
-        // Gestion du clic sur le bouton "Générer le Graphique"
+        
         generateButton.addEventListener('click', () => {
             console.log("Bouton 'Générer le Graphique' cliqué !");
-            generateGraph(); // Appelle la fonction définie dans scripts.js
+            generateGraph(); 
         });
     });
 </script>

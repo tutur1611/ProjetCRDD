@@ -12,12 +12,13 @@ def home():
 
 @main.route('/login', methods=['GET', 'POST'])
 def login_route():
-    return login()  # Appelle la fonction `login` importée depuis `logique_routes.py`
+    return login()
 
 @main.route('/logout')
 def logout():
-    logout_user()
-    flash("Vous avez été déconnecté.", "success")
+    if current_user.is_authenticated:
+        logout_user()
+        flash("Vous avez été déconnecté.", "success")
     return redirect(url_for('main.login_route'))
 
 @main.route('/signIn', methods=['GET', 'POST'])

@@ -1,24 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM chargé !");
 
-    // Récupérer les éléments HTML
-    const nextButton = document.getElementById('nextButton');
-    const saveButton = document.getElementById('saveButton');
-    const generateButton = document.getElementById('generateButton');
+    const buttons = document.querySelectorAll('button');
 
-    // Gestion du clic sur le bouton "Suivant"
-    nextButton.addEventListener('click', generateFigureForms);
-
-    // Gestion du clic sur le bouton "Enregistrer la Reprise"
-    saveButton.addEventListener('click', saveReprise);
-
-    // Gestion du clic sur le bouton "Générer le Graphique"
-    generateButton.addEventListener('click', generateGraph);
+    buttons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            if (button.disabled) return; // Empêche les doubles clics
+            button.disabled = true; // Désactive le bouton après le premier clic
+            setTimeout(() => {
+                button.disabled = false; // Réactive le bouton après un délai
+            }, 1000); // Délai de 1 seconde
+        });
+    });
 });
 
 console.log("Script chargé !");
 
-// Fonction pour générer les formulaires dynamiques
 function generateFigureForms() {
     console.log("generateFigureForms appelée !");
     const figureCountElement = document.getElementById('figureCount');
@@ -33,10 +30,8 @@ function generateFigureForms() {
         return;
     }
 
-    // Réinitialiser le conteneur des formulaires
     figureFormsContainer.innerHTML = '';
 
-    // Lettres disponibles pour une carrière de dressage
     const dressageLetters = ['H', 'S', 'E', 'V', 'K', 'A', 'F', 'P', 'B', 'R', 'M', 'C'];
     const invalidStartCercle = ['K', 'F', 'M', 'H'];
     const validDoubler = {
@@ -45,13 +40,12 @@ function generateFigureForms() {
         'S': ['R'], 'R': ['S'], 'H': ['M'], 'M': ['H']
     };
     const validDiagonale = {
-        'M': ['K'], // M peut aller vers K
-        'K': ['M'], // K peut aller vers M
-        'F': ['H'], // F peut aller vers H
-        'H': ['F']  // H peut aller vers F
+        'M': ['K'], 
+        'K': ['M'], 
+        'F': ['H'], 
+        'H': ['F']  
     };
 
-    // Générer les formulaires pour chaque figure
     for (let i = 1; i <= figureCount; i++) {
         const formGroup = document.createElement('div');
         formGroup.className = 'mb-4 border p-3 rounded bg-light';
@@ -61,6 +55,7 @@ function generateFigureForms() {
             <div class="mb-3">
                 <label for="figureType${i}" class="form-label">Type de Figure :</label>
                 <select id="figureType${i}" class="form-select" required>
+                    <option value="" disabled selected>Veuillez sélectionner...</option>
                     <option value="Volte">Volte</option>
                     <option value="Cercle">Cercle</option>
                     <option value="Doubler">Ligne droite</option>
@@ -70,12 +65,15 @@ function generateFigureForms() {
             <div class="mb-3">
                 <label for="lettreDepart${i}" class="form-label">Lettre de Départ :</label>
                 <select id="lettreDepart${i}" class="form-select" required>
+                    <option value="" disabled selected>Veuillez sélectionner...</option>
                     ${dressageLetters.map(letter => `<option value="${letter}">${letter}</option>`).join('')}
                 </select>
             </div>
             <div class="mb-3" id="lettreArriveeContainer${i}" style="display: none;">
                 <label for="lettreArrivee${i}" class="form-label">Lettre d'Arrivée :</label>
-                <select id="lettreArrivee${i}" class="form-select"></select>
+                <select id="lettreArrivee${i}" class="form-select">
+                    <option value="" disabled selected>Veuillez sélectionner...</option>
+                </select>
             </div>
         `;
 
@@ -91,39 +89,46 @@ function generateFigureForms() {
 
             if (type === 'Volte') {
                 lettreArriveeContainer.style.display = 'none';
-                lettreDepart.innerHTML = dressageLetters
-                    .map(letter => `<option value="${letter}">${letter}</option>`)
-                    .join('');
+                lettreDepart.innerHTML = `
+                    <option value="" disabled selected>Veuillez sélectionner...</option>
+                    ${dressageLetters.map(letter => `<option value="${letter}">${letter}</option>`).join('')}
+                `;
             } else if (type === 'Cercle') {
                 lettreArriveeContainer.style.display = 'none';
-                lettreDepart.innerHTML = dressageLetters
-                    .filter(letter => !invalidStartCercle.includes(letter)) // Exclure K, F, M, H
-                    .map(letter => `<option value="${letter}">${letter}</option>`)
-                    .join('');
+                lettreDepart.innerHTML = `
+                    <option value="" disabled selected>Veuillez sélectionner...</option>
+                    ${dressageLetters
+                        .filter(letter => !invalidStartCercle.includes(letter)) // Exclure K, F, M, H
+                        .map(letter => `<option value="${letter}">${letter}</option>`)
+                        .join('')}`;
             } else if (type === 'Doubler') {
                 lettreArriveeContainer.style.display = 'block';
-                lettreDepart.innerHTML = Object.keys(validDoubler) // Proposer uniquement les lettres valides pour doubler
-                    .map(letter => `<option value="${letter}">${letter}</option>`)
-                    .join('');
+                lettreDepart.innerHTML = `
+                    <option value="" disabled selected>Veuillez sélectionner...</option>
+                    ${Object.keys(validDoubler) 
+                        .map(letter => `<option value="${letter}">${letter}</option>`)
+                        .join('')}`;
                 lettreDepart.addEventListener('change', () => {
                     const start = lettreDepart.value;
                     const validArrivals = validDoubler[start] || [];
-                    lettreArrivee.innerHTML = validArrivals
-                        .map(letter => `<option value="${letter}">${letter}</option>`)
-                        .join('');
+                    lettreArrivee.innerHTML = `
+                        <option value="" disabled selected>Veuillez sélectionner...</option>
+                        ${validArrivals.map(letter => `<option value="${letter}">${letter}</option>`).join('')}`;
                 });
                 lettreDepart.dispatchEvent(new Event('change'));
             } else if (type === 'Diagonale') {
                 lettreArriveeContainer.style.display = 'block';
-                lettreDepart.innerHTML = Object.keys(validDiagonale) // Proposer uniquement K, F, M, H
-                    .map(letter => `<option value="${letter}">${letter}</option>`)
-                    .join('');
+                lettreDepart.innerHTML = `
+                    <option value="" disabled selected>Veuillez sélectionner...</option>
+                    ${Object.keys(validDiagonale) 
+                        .map(letter => `<option value="${letter}">${letter}</option>`)
+                        .join('')}`;
                 lettreDepart.addEventListener('change', () => {
                     const start = lettreDepart.value;
                     const validArrivals = validDiagonale[start] || [];
-                    lettreArrivee.innerHTML = validArrivals
-                        .map(letter => `<option value="${letter}">${letter}</option>`)
-                        .join('');
+                    lettreArrivee.innerHTML = `
+                        <option value="" disabled selected>Veuillez sélectionner...</option>
+                        ${validArrivals.map(letter => `<option value="${letter}">${letter}</option>`).join('')}`;
                 });
                 lettreDepart.dispatchEvent(new Event('change'));
             }
@@ -136,7 +141,6 @@ function generateFigureForms() {
     step2.style.display = 'block';
 }
 
-// Fonction pour enregistrer la reprise
 function saveReprise() {
     console.log("saveReprise appelée !");
     const figureCountElement = document.getElementById('figureCount');
@@ -162,7 +166,6 @@ function saveReprise() {
         return;
     }
 
-    // Envoyer les données au serveur
     fetch('/save_reprise', {
         method: 'POST',
         headers: {
@@ -172,16 +175,13 @@ function saveReprise() {
     })
     .then(response => response.json())
     .then(data => {
-        alert("Reprise enregistrée avec succès !");
         window.location.reload();
     })
     .catch(error => {
         console.error('Erreur:', error);
-        alert("Une erreur s'est produite lors de l'enregistrement.");
     });
 }
 
-// Fonction pour générer le graphique
 function generateGraph() {
     console.log("generateGraph appelée !");
     const figureCountElement = document.getElementById('figureCount');
